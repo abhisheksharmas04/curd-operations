@@ -26,65 +26,36 @@ public class TouristOperationsController {
 	private ITouristManagementService service;
 	
 	@PostMapping("/register")
-	public ResponseEntity<String> enrollTourist(@RequestBody Tourist tourist){
+	public ResponseEntity<String> enrollTourist(@RequestBody Tourist tourist) {
 		// use service
-		try {
-			String resultMsg = service.registerTourist(tourist);
-			return new ResponseEntity<String>(resultMsg, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Problem in tourist endrollment", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		String resultMsg = service.registerTourist(tourist);
+		return new ResponseEntity<String>(resultMsg, HttpStatus.CREATED);
+
 	}
 	
 	@GetMapping("/findAll")
-	public ResponseEntity<?> getAllTourist(){
-		try {
-			List<Tourist> touristList = service.fetchAllTourist();
-			return new ResponseEntity<List<Tourist>>(touristList,HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>("Problem in fetching tourist", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<?> getAllTourist() {
+		List<Tourist> touristList = service.fetchAllTourist();
+		return new ResponseEntity<List<Tourist>>(touristList, HttpStatus.OK);
 	}
 	
 	@GetMapping("/find/{id}")
-	public ResponseEntity<?>displayTouristById(@PathVariable("id") Integer id){
-		try {
-			 return new ResponseEntity<>(service.fetchTouristById(id),HttpStatus.OK);
-		} catch (TouristNotFoundException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
+	public ResponseEntity<?> displayTouristById(@PathVariable("id") Integer id) throws TouristNotFoundException {
+		return new ResponseEntity<>(service.fetchTouristById(id), HttpStatus.OK);
 	}
 	
 	@PutMapping("/modify")
-	public ResponseEntity<String>updateTourist(@RequestBody Tourist tourist){
-		try {
+	public ResponseEntity<String>updateTourist(@RequestBody Tourist tourist) throws TouristNotFoundException{
 			return new ResponseEntity<String>(service.updateTouristDetails(tourist),HttpStatus.OK);
-		} catch (TouristNotFoundException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 	
-	public ResponseEntity<String>deleteTouristById(@PathVariable("id") Integer id){
-		try {
+	public ResponseEntity<String>deleteTouristById(@PathVariable("id") Integer id) throws TouristNotFoundException{
 			return new ResponseEntity<String>(service.deleteTourist(id), HttpStatus.OK);
-		} catch (TouristNotFoundException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 	
 	@PatchMapping("/budgetModify/{id}/{hike}")
-	public ResponseEntity<String>updateBudget(@PathVariable("id")Integer id, @PathVariable("hike") Float hikePer){
-		try {
+	public ResponseEntity<String>updateBudget(@PathVariable("id")Integer id, @PathVariable("hike") Float hikePer) throws TouristNotFoundException{
 			return new ResponseEntity<String>(service.updateTouristBudgetById(id,hikePer), HttpStatus.OK);
-		} catch (TouristNotFoundException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 	}
 
 }
